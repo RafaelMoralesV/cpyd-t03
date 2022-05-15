@@ -3,4 +3,4 @@ project(cpyd_01)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(cpyd_01 main.cpp)
+add_executable(test-check main.cpp)
