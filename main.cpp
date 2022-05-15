@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 int main(int argc, char* argv[]) {
     if(argc == 1){
@@ -33,12 +34,19 @@ int main(int argc, char* argv[]) {
     }
 
     auto file_index = std::find(args.begin(), args.end(), "--file");
-    if(file_index == args.end()) {
-        std::cout << "--file necesita ser seguido por el nombre del archivo .csv a revisar.";
+    if(file_index == args.end() || argc < 3) {
+        std::cout << "--file necesita ser seguido por el nombre del archivo .csv a revisar." << std::endl;
         return 1;
     }
 
     std::string filename = file_index[1];
+
+    std::ifstream test(filename);
+    if (!test)
+    {
+        std::cout << "El archivo sugerido no existe!" << std::endl;
+        return 1;
+    }
 
     auto mode_index = std::find(args.begin(), args.end(), "--modo");
     std::string mode = mode_index == args.end() ? "secuencial" : mode_index[1];
