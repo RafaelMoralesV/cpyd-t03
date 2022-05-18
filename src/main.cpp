@@ -2,6 +2,7 @@
 #include <vector>
 #include <fstream>
 #include "OpenMP.h"
+#include "SequentialInputReader.h"
 
 int main(int argc, char* argv[]) {
     if(argc == 1){
@@ -59,6 +60,9 @@ int main(int argc, char* argv[]) {
                     << std::endl;
         return 1;
     }
+
+    auto reader = new SequentialInputReader(filename);
+    reader->readFile();
 
     return 0;
 }
