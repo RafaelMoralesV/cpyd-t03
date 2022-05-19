@@ -1,8 +1,10 @@
 #include <iostream>
 #include <vector>
-#include <fstream>
-#include "OpenMP.h"
 #include "SequentialInputReader.h"
+#include "OpenMPInputReader.h"
+#include "MPIInputReader.h"
+
+using namespace cpyd;
 
 int main(int argc, char* argv[]) {
     if(argc == 1){
@@ -62,11 +64,11 @@ int main(int argc, char* argv[]) {
             reader = new SequentialInputReader(file);
             break;
         case 1:
-            reader = new SequentialInputReader(file);
+            reader = new OpenMPInputReader(file);
             std::cout << "Selected: OpenMP" << std::endl;
             break;
         case 2:
-            reader = new SequentialInputReader(file);
+            reader = new MPIInputReader(file);
             std::cout << "Selected: MPI" << std::endl;
             break;
         default:
@@ -75,7 +77,6 @@ int main(int argc, char* argv[]) {
                         << std::endl;
             return 1;
     }
-
     reader->readFile();
 
     return 0;
