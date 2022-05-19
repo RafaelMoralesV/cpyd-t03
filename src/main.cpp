@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
-#include "SequentialInputReader.h"
-#include "OpenMPInputReader.h"
-#include "MPIInputReader.h"
+#include "headers/SequentialInputReader.h"
+#include "headers/OpenMPInputReader.h"
+#include "headers/MPIInputReader.h"
 
 using namespace cpyd;
 

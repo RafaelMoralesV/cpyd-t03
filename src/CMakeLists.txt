@@ -1,7 +1,7 @@
 add_executable(test-check
         main.cpp
-        InputReader.cpp InputReader.h
-        SequentialInputReader.cpp SequentialInputReader.h
-        OpenMPInputReader.cpp OpenMPInputReader.h
-        MPIInputReader.cpp MPIInputReader.h
+        classes/InputReader.cpp headers/InputReader.h
+        classes/SequentialInputReader.cpp headers/SequentialInputReader.h
+        classes/OpenMPInputReader.cpp headers/OpenMPInputReader.h
+        classes/MPIInputReader.cpp headers/MPIInputReader.h
         )

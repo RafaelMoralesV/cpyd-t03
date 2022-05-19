@@ -2,7 +2,7 @@
 // Created by rafael on 5/19/22.
 //
 
-#include "MPIInputReader.h"
+#include "../headers/MPIInputReader.h"
 
 namespace cpyd {
     MPIInputReader::MPIInputReader(std::ifstream & file)

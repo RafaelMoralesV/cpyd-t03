@@ -2,7 +2,7 @@
 // Created by rafael on 5/17/22.
 //
 
-#include "SequentialInputReader.h"
+#include "../headers/SequentialInputReader.h"
 
 SequentialInputReader::SequentialInputReader(std::ifstream & file)
     : InputReader(file) { }
