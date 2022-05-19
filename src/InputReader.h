@@ -9,7 +9,8 @@
 
 class InputReader {
 protected:
-    std::ifstream csvFile;
+    explicit InputReader(std::ifstream & file);
+    std::ifstream & csvFile;
     std::ofstream output;
 public:
     virtual void readFile() = 0;

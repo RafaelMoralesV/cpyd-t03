@@ -3,14 +3,9 @@
 //
 
 #include "SequentialInputReader.h"
-#include <vector>
-#include <iostream>
-#include <sstream>
 
-SequentialInputReader::SequentialInputReader(const std::string& filename)
-{
-    this->csvFile = std::ifstream(filename);
-}
+SequentialInputReader::SequentialInputReader(std::ifstream & file)
+    : InputReader(file) { }
 
 void SequentialInputReader::readFile() {
     if(!this->csvFile.is_open()){

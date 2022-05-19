@@ -7,10 +7,13 @@
 
 #include <fstream>
 #include "InputReader.h"
+#include <vector>
+#include <iostream>
+#include <sstream>
 
 class SequentialInputReader: public InputReader {
 public:
-    explicit SequentialInputReader(const std::string& filename);
+    explicit SequentialInputReader(std::ifstream & file);
 
     void readFile() override;
     void processRow() override;
