@@ -19,14 +19,9 @@ void SequentialInputReader::readFile() {
     getline(this->csvFile, line);
     while(std::getline(this->csvFile, line)){
         std::stringstream s(line);
-        while(std::getline(s, word, ';')){
-            std::cout << word << "  ";
-        }
-        std::cout << std::endl;
+
+        this->processRow(s);
+
         if(rowline++ == 30) break;
     }
-}
-
-void SequentialInputReader::processRow() {
-
 }

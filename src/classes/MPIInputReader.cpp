@@ -11,8 +11,4 @@ namespace cpyd {
     void MPIInputReader::readFile() {
         // TODO
     }
-
-    void MPIInputReader::processRow() {
-        // TODO
-    }
 } // cpyd

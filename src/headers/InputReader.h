@@ -5,7 +5,12 @@
 #ifndef CPYD_01_INPUTREADER_H
 #define CPYD_01_INPUTREADER_H
 
+#include <sstream>
 #include <fstream>
+
+#define COLUMNAS 13
+#define PUNTAJE_CORRECTA 0.5
+#define PUNTAJE_INCORRECTA 0.12
 
 class InputReader {
 protected:
@@ -14,7 +19,7 @@ protected:
     std::ofstream output;
 public:
     virtual void readFile() = 0;
-    virtual void processRow() = 0;
+    void processRow(std::stringstream & stream);
 
     ~InputReader();
 };

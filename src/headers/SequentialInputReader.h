@@ -16,7 +16,6 @@ public:
     explicit SequentialInputReader(std::ifstream & file);
 
     void readFile() override;
-    void processRow() override;
 };
 
 
