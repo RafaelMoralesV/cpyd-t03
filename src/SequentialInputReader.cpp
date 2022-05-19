@@ -31,3 +31,7 @@ void SequentialInputReader::readFile() {
         if(rowline++ == 30) break;
     }
 }
+
+void SequentialInputReader::processRow() {
+
+}

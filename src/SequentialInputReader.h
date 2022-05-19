@@ -8,13 +8,12 @@
 #include <fstream>
 #include "InputReader.h"
 
-class SequentialInputReader: InputReader {
-private:
-    std::ifstream csvFile;
+class SequentialInputReader: public InputReader {
 public:
     explicit SequentialInputReader(const std::string& filename);
 
     void readFile() override;
+    void processRow() override;
 };
 
 

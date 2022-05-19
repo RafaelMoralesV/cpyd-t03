@@ -53,16 +53,26 @@ int main(int argc, char* argv[]) {
     auto mode_index = std::find(args.begin(), args.end(), "--modo");
     std::string mode = mode_index == args.end() ? "secuencial" : mode_index[1];
 
+    InputReader* reader;
     std::vector<std::string> modos {"secuencial", "openmp", "mpi"};
-    if(std::find(modos.begin(), modos.end(), mode) == modos.end()) {
-        std::cout   << "El modo elegido es invalido! "
-                    << "Fijate que esté escrito totalmente en minúsculas y prueba de nuevo"
-                    << std::endl;
-        return 1;
-    }
+    auto selected = std::find(modos.begin(), modos.end(), mode);
 
-    auto reader = new SequentialInputReader(filename);
-    reader->readFile();
+    switch (selected - modos.begin()) {
+        case 0:
+            reader = new SequentialInputReader(filename);
+            break;
+        case 1:
+            std::cout << "Selected: OpenMP" << std::endl;
+            break;
+        case 2:
+            std::cout << "Selected: MPI" << std::endl;
+            break;
+        default:
+            std::cout   << "El modo elegido es invalido! "
+                        << "Fijate que esté escrito totalmente en minúsculas y prueba de nuevo"
+                        << std::endl;
+            return 1;
+    }
 
     return 0;
 }

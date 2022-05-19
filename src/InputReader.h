@@ -5,11 +5,17 @@
 #ifndef CPYD_01_INPUTREADER_H
 #define CPYD_01_INPUTREADER_H
 
+#include <fstream>
 
 class InputReader {
+protected:
+    std::ifstream csvFile;
+    std::ofstream output;
 public:
     virtual void readFile() = 0;
-};
+    virtual void processRow() = 0;
 
+    ~InputReader();
+};
 
 #endif //CPYD_01_INPUTREADER_H
