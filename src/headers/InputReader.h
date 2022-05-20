@@ -27,11 +27,11 @@ public:
      * cuales deben ser un uuidv4, seguido por 12 columnas de respuesta a una pregunta n, de tal manera de que el valor de
      * esta sea "A", "B", "C", "D", "E" o "-".
      *
-     * @param [std::stringstream] stream contiene una fila entera del archivo .csv que se está analizando
+     * @param [std::string] row contiene una fila entera del archivo .csv que se está analizando
      *
-     * @returns [void]
+     * @returns [std::string] Retorna un string con la fila lista para insertarse en el archivo output.csv
      */
-    virtual void processRow(std::stringstream & stream);
+    virtual std::string processRow(std::string & row);
 
     ~InputReader();
 };

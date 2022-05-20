@@ -16,11 +16,13 @@ InputReader::InputReader(std::ifstream & file)
     std::getline(csvFile, aux);
 }
 
-void InputReader::processRow(std::stringstream & stream) {
+std::string InputReader::processRow(std::string & row) {
     const char respuestas[] = {'A', 'E', 'C',
                               'B', 'B', 'D',
                               'A', 'B', 'E',
                               'C', 'B', 'D' };
+
+    std::stringstream stream(row);
 
     std::string word;
     std::string uuid;
@@ -45,10 +47,13 @@ void InputReader::processRow(std::stringstream & stream) {
 
     nota = round(nota * 10) / 10.0;
 
-    output  << uuid         << ','
-            << correctas    << ','
-            << incorrectas  << ','
-            << omitidas     << ','
-            << puntaje      << ','
-            << nota         << std::endl;
+    std::stringstream out;
+
+    out << uuid         << ','
+        << correctas    << ','
+        << incorrectas  << ','
+        << omitidas     << ','
+        << puntaje      << ','
+        << nota;
+    return out.str();
 }

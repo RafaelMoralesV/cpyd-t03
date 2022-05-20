@@ -14,11 +14,8 @@ void SequentialInputReader::readFile() {
 
     std::string line, word;
     std::vector<std::string> row;
-    int rowline = 0;
 
     while(std::getline(this->csvFile, line)){
-        std::stringstream s(line);
-
-        this->processRow(s);
+        output << processRow(line) << std::endl;
     }
 }

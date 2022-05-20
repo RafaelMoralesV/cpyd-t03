@@ -6,6 +6,9 @@
 #define CPYD_01_OPENMPINPUTREADER_H
 
 #include "InputReader.h"
+#include<omp.h>
+
+#define ROW_LEN 87 * sizeof(char)
 
 namespace cpyd {
 
