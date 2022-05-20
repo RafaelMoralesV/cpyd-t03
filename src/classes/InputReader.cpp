@@ -12,6 +12,8 @@ InputReader::~InputReader() {
 
 InputReader::InputReader(std::ifstream & file)
     : csvFile(file), output("output.csv") {
+    std::string aux;
+    std::getline(csvFile, aux);
 }
 
 void InputReader::processRow(std::stringstream & stream) {
