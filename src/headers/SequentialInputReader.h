@@ -11,10 +11,24 @@
 #include <iostream>
 #include <sstream>
 
+/**
+ * Lector de archivo .csv secuencial. Al igual que el resto de lectores, escribe su resultado en un archivo
+ * output.csv que existe en el mismo directorio que el archivo ejecutable.
+ */
 class SequentialInputReader: public InputReader {
 public:
     explicit SequentialInputReader(std::ifstream & file);
 
+    /**
+     * \brief Lector de archivo .csv secuencial
+     *
+     * Este lector del archivo lee de manera secuencial y con un solo núcleo. Esta alternativa no ocupa ninguna forma
+     * de paralelismo o concurrencia.
+     *
+     * @param none
+     *
+     * @returns void
+     */
     void readFile() override;
 };
 

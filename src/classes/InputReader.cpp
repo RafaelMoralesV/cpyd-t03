@@ -1,6 +1,7 @@
 //
 // Created by rafael on 5/19/22.
 //
+#include <cmath>
 #include "../headers/InputReader.h"
 
 
@@ -22,7 +23,7 @@ void InputReader::processRow(std::stringstream & stream) {
     std::string word;
     std::string uuid;
     int correctas = 0, incorrectas = 0, omitidas = 0;
-    double puntaje = 0.0, nota = 0.0;
+    double puntaje, nota;
     std::getline(stream, uuid, ';');
     for(int i = 1; i < COLUMNAS; i++) {
         std::getline(stream, word, ';');
@@ -39,6 +40,8 @@ void InputReader::processRow(std::stringstream & stream) {
 
     puntaje = correctas * PUNTAJE_CORRECTA - incorrectas * PUNTAJE_INCORRECTA;
     nota = puntaje > 0 ? 1 + puntaje : 1;
+
+    nota = round(nota * 10) / 10.0;
 
     output  << uuid         << ','
             << correctas    << ','

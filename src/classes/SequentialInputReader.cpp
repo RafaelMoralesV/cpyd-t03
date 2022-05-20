@@ -21,7 +21,5 @@ void SequentialInputReader::readFile() {
         std::stringstream s(line);
 
         this->processRow(s);
-
-        if(rowline++ == 30) break;
     }
 }

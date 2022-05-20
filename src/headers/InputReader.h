@@ -19,7 +19,19 @@ protected:
     std::ofstream output;
 public:
     virtual void readFile() = 0;
-    void processRow(std::stringstream & stream);
+
+    /**
+     * \brief Procesador de una línea singular
+     *
+     * Espera recibir un string stream de un archivo csv que utilice un separador ';', y que contenga 13 columnas, las
+     * cuales deben ser un uuidv4, seguido por 12 columnas de respuesta a una pregunta n, de tal manera de que el valor de
+     * esta sea "A", "B", "C", "D", "E" o "-".
+     *
+     * @param [std::stringstream] stream contiene una fila entera del archivo .csv que se está analizando
+     *
+     * @returns [void]
+     */
+    virtual void processRow(std::stringstream & stream);
 
     ~InputReader();
 };
