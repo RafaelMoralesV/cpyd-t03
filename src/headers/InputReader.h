@@ -14,7 +14,7 @@
 
 class InputReader {
 protected:
-    explicit InputReader(std::ifstream & file);
+    InputReader(std::ifstream & file, std::string & output);
     std::ifstream & csvFile;
     std::ofstream output;
 public:

@@ -10,8 +10,8 @@ InputReader::~InputReader() {
     output.close();
 }
 
-InputReader::InputReader(std::ifstream & file)
-    : csvFile(file), output("output.csv") {
+InputReader::InputReader(std::ifstream & file, std::string & output)
+    : csvFile(file), output(output) {
     std::string aux;
     std::getline(csvFile, aux);
 }

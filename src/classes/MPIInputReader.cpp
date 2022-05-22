@@ -5,8 +5,8 @@
 #include "../headers/MPIInputReader.h"
 
 namespace cpyd {
-    MPIInputReader::MPIInputReader(std::ifstream & file)
-        : InputReader(file){ }
+    MPIInputReader::MPIInputReader(std::ifstream & file, std::string & output)
+        : InputReader(file, output){ }
 
     void MPIInputReader::readFile() {
         // TODO

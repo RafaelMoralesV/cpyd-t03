@@ -11,7 +11,7 @@ namespace cpyd {
 
     class MPIInputReader: public InputReader {
     public:
-        explicit MPIInputReader(std::ifstream & file);
+        MPIInputReader(std::ifstream & file, std::string & output);
 
         void readFile() override;
     };

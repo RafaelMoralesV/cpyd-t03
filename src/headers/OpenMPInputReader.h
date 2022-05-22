@@ -14,7 +14,7 @@ namespace cpyd {
 
     class OpenMPInputReader: public InputReader {
     public:
-        explicit OpenMPInputReader(std::ifstream & file);
+        OpenMPInputReader(std::ifstream & file, std::string & output);
 
         void readFile() override;
     };

@@ -7,8 +7,8 @@
 #include "../headers/OpenMPInputReader.h"
 
 namespace cpyd {
-    OpenMPInputReader::OpenMPInputReader(std::ifstream & file)
-        : InputReader(file){ }
+    OpenMPInputReader::OpenMPInputReader(std::ifstream & file, std::string & output)
+        : InputReader(file, output){ }
 
     void OpenMPInputReader::readFile() {
         const unsigned int CANT_ROWS = 100000;
