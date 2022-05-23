@@ -14,8 +14,8 @@
 
 class InputReader {
 protected:
-    InputReader(std::ifstream & file, std::string & output);
-    std::ifstream & csvFile;
+    InputReader(std::string & input, std::string & output);
+    std::ifstream csvFile;
     std::ofstream output;
 public:
     virtual void readFile() = 0;
@@ -32,6 +32,9 @@ public:
      * @returns [std::string] Retorna un string con la fila lista para insertarse en el archivo output.csv
      */
     virtual std::string processRow(std::string & row);
+
+    bool invalidInputFile();
+    bool invalidOutputFile();
 
     ~InputReader();
 };

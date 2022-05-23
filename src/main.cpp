@@ -7,6 +7,10 @@
 using namespace cpyd;
 
 int main(int argc, char* argv[]) {
+    std::cout << "Integrantes: " << std::endl
+        << "\tRafael Morales Venegas" << std::endl
+        << "\tDiego Oyarce Trejo" << std::endl;
+
     // No arguments prompt
     if(argc == 1){
         std::cout << "Utilización: ./test-check --file ./file.csv --out output.csv" << std::endl;
@@ -54,13 +58,6 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    std::ifstream file(filename);
-    if (!file)
-    {
-        std::cout << "El archivo sugerido no existe!" << std::endl;
-        return 1;
-    }
-
     // Output file
     auto out_index = std::find(args.begin(), args.end(), "--out");
     std::string output_filename = out_index == args.end() ? "output.csv" : out_index[1];
@@ -80,14 +77,14 @@ int main(int argc, char* argv[]) {
 
     switch (selected - modos.begin()) {
         case 0:
-            reader = new SequentialInputReader(file, output_filename);
+            reader = new SequentialInputReader(filename, output_filename);
             break;
         case 1:
-            reader = new OpenMPInputReader(file, output_filename);
+            reader = new OpenMPInputReader(filename, output_filename);
             std::cout << "Selected: OpenMP" << std::endl;
             break;
         case 2:
-            reader = new MPIInputReader(file, output_filename);
+            reader = new MPIInputReader(filename, output_filename);
             std::cout << "Selected: MPI" << std::endl;
             break;
         default:
@@ -96,6 +93,17 @@ int main(int argc, char* argv[]) {
                         << std::endl;
             return 1;
     }
+
+    if(reader->invalidInputFile()){
+        std::cout << "El archivo sugerido de input no existe!" << std::endl;
+        return 1;
+    }
+
+    if(reader->invalidOutputFile()){
+        std::cout << "El archivo sugerido de output es invalido!" << std::endl;
+        return 1;
+    }
+
     reader->readFile();
 
     return 0;

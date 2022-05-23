@@ -17,7 +17,7 @@
  */
 class SequentialInputReader: public InputReader {
 public:
-    SequentialInputReader(std::ifstream & file, std::string & output);
+    SequentialInputReader(std::string & input, std::string & output);
 
     /**
      * \brief Lector de archivo .csv secuencial

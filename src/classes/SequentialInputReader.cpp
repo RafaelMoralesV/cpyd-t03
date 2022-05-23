@@ -4,8 +4,8 @@
 
 #include "../headers/SequentialInputReader.h"
 
-SequentialInputReader::SequentialInputReader(std::ifstream & file, std::string & output)
-    : InputReader(file, output) { }
+SequentialInputReader::SequentialInputReader(std::string & input, std::string & output)
+    : InputReader(input, output) { }
 
 void SequentialInputReader::readFile() {
     if(!this->csvFile.is_open()){

@@ -4,17 +4,17 @@
 #include <cmath>
 #include "../headers/InputReader.h"
 
+InputReader::InputReader(std::string & input, std::string & output)
+        : csvFile(input), output(output) {
+    std::string aux;
+    std::getline(csvFile, aux);
+}
 
 InputReader::~InputReader() {
     csvFile.close();
     output.close();
 }
 
-InputReader::InputReader(std::ifstream & file, std::string & output)
-    : csvFile(file), output(output) {
-    std::string aux;
-    std::getline(csvFile, aux);
-}
 
 std::string InputReader::processRow(std::string & row) {
     const char respuestas[] = {'A', 'E', 'C',
@@ -56,4 +56,12 @@ std::string InputReader::processRow(std::string & row) {
         << puntaje      << ','
         << nota;
     return out.str();
+}
+
+bool InputReader::invalidInputFile() {
+    return !csvFile;
+}
+
+bool InputReader::invalidOutputFile() {
+    return !output;
 }
