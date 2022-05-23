@@ -11,4 +11,5 @@ add_executable(test-check
         src/classes/MPIInputReader.cpp src/headers/MPIInputReader.h
         )
 find_package(OpenMP REQUIRED)
-target_link_libraries(test-check OpenMP::OpenMP_CXX)
+find_package(MPI REQUIRED)
+target_link_libraries(test-check OpenMP::OpenMP_CXX MPI::MPI_CXX)

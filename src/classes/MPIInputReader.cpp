@@ -6,9 +6,16 @@
 
 namespace cpyd {
     MPIInputReader::MPIInputReader(std::string & input, std::string & output)
-        : InputReader(input, output){ }
+        : InputReader(input, output), m_input(input), m_output(output){ }
 
     void MPIInputReader::readFile() {
-        // TODO
+        MPI::File in;
+        int rank, size;
+        int ierr;
+
+        MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+        MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+
     }
 } // cpyd

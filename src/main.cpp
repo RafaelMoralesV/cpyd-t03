@@ -7,14 +7,18 @@
 using namespace cpyd;
 
 int main(int argc, char* argv[]) {
+    MPI_Init(&argc, &argv);
+
     std::cout << "Integrantes: " << std::endl
-        << "\tRafael Morales Venegas" << std::endl
-        << "\tDiego Oyarce Trejo" << std::endl;
+              << "\tRafael Morales Venegas" << std::endl
+              << "\tDiego Oyarce Trejo" << std::endl;
 
     // No arguments prompt
     if(argc == 1){
         std::cout << "Utilización: ./test-check --file ./file.csv --out output.csv" << std::endl;
         std::cout << "Puedes utilizar --help para más información." << std::endl;
+
+        MPI_Finalize();
         return 0;
     }
 
@@ -42,6 +46,7 @@ int main(int argc, char* argv[]) {
             << "\tCada uno de estos modos altera la forma en que se comporta la ejecucion del codigo." << std::endl
             << "\tPor defecto, este programa ejecuta el modo secuencial." << std::endl;
 
+        MPI_Finalize();
         return 0;
     }
 
@@ -49,12 +54,16 @@ int main(int argc, char* argv[]) {
     auto file_index = std::find(args.begin(), args.end(), "--file");
     if(file_index == args.end() || argc < 3) {
         std::cout << "--file necesita ser seguido por el nombre del archivo .csv a revisar." << std::endl;
+
+        MPI_Finalize();
         return 1;
     }
 
     std::string filename = file_index[1];
     if(filename.compare(filename.length() - 4, 4, ".csv") != 0) {
         std::cout << "El archivo de INPUT debe terminar en '.csv'!" << std::endl;
+
+        MPI_Finalize();
         return 1;
     }
 
@@ -64,6 +73,8 @@ int main(int argc, char* argv[]) {
 
     if(output_filename.compare(output_filename.length() - 4, 4, ".csv") != 0) {
         std::cout << "El archivo de OUTPUT debe terminar en '.csv'!" << std::endl;
+
+        MPI_Finalize();
         return 1;
     }
 
@@ -91,20 +102,27 @@ int main(int argc, char* argv[]) {
             std::cout   << "El modo elegido es invalido! "
                         << "Fijate que esté escrito totalmente en minúsculas y prueba de nuevo"
                         << std::endl;
+
+            MPI_Finalize();
             return 1;
     }
 
     if(reader->invalidInputFile()){
         std::cout << "El archivo sugerido de input no existe!" << std::endl;
+
+        MPI_Finalize();
         return 1;
     }
 
     if(reader->invalidOutputFile()){
         std::cout << "El archivo sugerido de output es invalido!" << std::endl;
+
+        MPI_Finalize();
         return 1;
     }
 
     reader->readFile();
 
+    MPI_Finalize();
     return 0;
 }
