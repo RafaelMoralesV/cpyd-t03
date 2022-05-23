@@ -20,6 +20,8 @@ namespace cpyd {
         void readFile() override;
     };
 
+    void partitionFile(int filesize, int rank, int size, int overlap, int *start, int *end);
+    void readdataMPI(MPI_File *in, int rank, int size, int overlap, char **data, int *ndata);
 } // cpyd
 
 #endif //CPYD_01_MPIINPUTREADER_H

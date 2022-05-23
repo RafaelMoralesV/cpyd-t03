@@ -8,13 +8,19 @@ using namespace cpyd;
 
 int main(int argc, char* argv[]) {
     MPI_Init(&argc, &argv);
+    int rank, size;
 
-    std::cout << "Integrantes: " << std::endl
-              << "\tRafael Morales Venegas" << std::endl
-              << "\tDiego Oyarce Trejo" << std::endl;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    if(rank == 0){
+        std::cout << "Integrantes: " << std::endl
+                  << "\tRafael Morales Venegas" << std::endl
+                  << "\tDiego Oyarce Trejo" << std::endl;
+    }
 
     // No arguments prompt
-    if(argc == 1){
+    if(argc == 1 && rank == 0){
         std::cout << "Utilización: ./test-check --file ./file.csv --out output.csv" << std::endl;
         std::cout << "Puedes utilizar --help para más información." << std::endl;
 
@@ -30,7 +36,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Help message
-    if(std::find(args.begin(), args.end(), "--help") != args.end()){
+    if(std::find(args.begin(), args.end(), "--help") != args.end() && rank == 0){
         if(argc > 2) {
             std::cout   << "--help evitará el resto de la ejecución."
                         << " No lo incluyas con el resto de argumentos!"
@@ -52,7 +58,7 @@ int main(int argc, char* argv[]) {
 
     // Input file
     auto file_index = std::find(args.begin(), args.end(), "--file");
-    if(file_index == args.end() || argc < 3) {
+    if((file_index == args.end() || argc < 3) && rank == 0) {
         std::cout << "--file necesita ser seguido por el nombre del archivo .csv a revisar." << std::endl;
 
         MPI_Finalize();
@@ -60,7 +66,7 @@ int main(int argc, char* argv[]) {
     }
 
     std::string filename = file_index[1];
-    if(filename.compare(filename.length() - 4, 4, ".csv") != 0) {
+    if(filename.compare(filename.length() - 4, 4, ".csv") != 0 && rank == 0) {
         std::cout << "El archivo de INPUT debe terminar en '.csv'!" << std::endl;
 
         MPI_Finalize();
@@ -71,7 +77,7 @@ int main(int argc, char* argv[]) {
     auto out_index = std::find(args.begin(), args.end(), "--out");
     std::string output_filename = out_index == args.end() ? "output.csv" : out_index[1];
 
-    if(output_filename.compare(output_filename.length() - 4, 4, ".csv") != 0) {
+    if(output_filename.compare(output_filename.length() - 4, 4, ".csv") != 0 && rank == 0) {
         std::cout << "El archivo de OUTPUT debe terminar en '.csv'!" << std::endl;
 
         MPI_Finalize();
@@ -96,25 +102,26 @@ int main(int argc, char* argv[]) {
             break;
         case 2:
             reader = new MPIInputReader(filename, output_filename);
-            std::cout << "Selected: MPI" << std::endl;
+            if (rank == 0) std::cout << "Selected: MPI" << std::endl;
             break;
         default:
-            std::cout   << "El modo elegido es invalido! "
-                        << "Fijate que esté escrito totalmente en minúsculas y prueba de nuevo"
-                        << std::endl;
-
+            if(rank == 0) {
+                std::cout << "El modo elegido es invalido! "
+                          << "Fijate que esté escrito totalmente en minúsculas y prueba de nuevo"
+                          << std::endl;
+            }
             MPI_Finalize();
             return 1;
     }
 
-    if(reader->invalidInputFile()){
+    if(reader->invalidInputFile() && rank == 0){
         std::cout << "El archivo sugerido de input no existe!" << std::endl;
 
         MPI_Finalize();
         return 1;
     }
 
-    if(reader->invalidOutputFile()){
+    if(reader->invalidOutputFile() && rank == 0){
         std::cout << "El archivo sugerido de output es invalido!" << std::endl;
 
         MPI_Finalize();
