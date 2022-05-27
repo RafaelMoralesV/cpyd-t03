@@ -46,3 +46,5 @@ test-check --file pruebas.csv --modo openmp
 test-check --file pruebas.csv --modo mpi
 ```
 
+### Errores
+La implementación de MPI aún no está lista, y crasheará el programa en ejecución.
