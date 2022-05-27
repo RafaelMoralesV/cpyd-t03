@@ -4,10 +4,12 @@
 
 #include "../headers/MPIInputReader.h"
 
+
 namespace cpyd {
     MPIInputReader::MPIInputReader(std::string & input, std::string & output)
         : InputReader(input, output), m_input(input), m_output(output){
-        csvFile.close();
+        this->csvFile.close();
+        this->output.close();
     }
 
     void MPIInputReader::readFile() {
@@ -19,8 +21,7 @@ namespace cpyd {
 
         MPI_Info info;
         MPI_Info_create(&info);
-        MPI_Info_set(info, "cb_config_list","*:1"); // ROMIO: one reader per node
-        // Eventually, should be able to use io_nodes_list or similar
+        MPI_Info_set(info, "cb_config_list","*:1");
 
         MPI_File_open(MPI_COMM_WORLD, m_input.c_str(), MPI_MODE_RDONLY, info, &in);
 
@@ -33,20 +34,12 @@ namespace cpyd {
 
         std::stringstream s(data), out, fault_string;
         std::string row;
+
+        // El primer nodo siempre tiene la linea inicial, asi que vale la pena quitarsela nomas.
         if(rank == 0) std::getline(s, row);
         while(std::getline(s, row)){
             std::string word;
             std::stringstream rowstream(row);
-
-            if(row.length() < 86){
-                if(rank == 0) {
-                    fault_string << row;
-                    continue;
-                }
-                // La linea es menor a lo esperado.
-                MPI_Send(&row, (int) row.length() + 1, MPI_CHAR, 0, 1, MPI_COMM_WORLD);
-                continue;
-            }
 
             out << processRow(row) << std::endl;
         }
@@ -54,19 +47,21 @@ namespace cpyd {
 
         if(rank != 0) {
             std::string out_str = out.str();
-            MPI_Send(&out_str, (int) out_str.length(), MPI_CHAR, 0, 0, MPI_COMM_WORLD);
+            MPI_Send(out_str.c_str(), (int) out_str.length() + 1, MPI_CHAR, 0, 0, MPI_COMM_WORLD);
         }
         else {
-            std::string out_str;
-            output << out.str();
+            std::ofstream outputfile(this->m_output);
+            outputfile << out.str();
             for(int source = 1; source < size; source++) {
                 MPI_Status status;
-                MPI_Recv(&out_str, ndata, MPI_CHAR, source, 0, MPI_COMM_WORLD, &status);
+                char* buff = new char[ndata + 1];
+                MPI_Recv(buff, ndata + 1, MPI_CHAR, source, 0, MPI_COMM_WORLD, &status);
 
-                std::cout << "SOURCE " << source << ": " << out_str << std::endl;
-
-                output << out_str;
+                outputfile << buff;
+                delete [] buff;
             }
+
+            outputfile.close();
         }
 
         delete [] data;
@@ -76,9 +71,14 @@ namespace cpyd {
     }
 
     void partitionFile(const int filesize, const int rank, const int size, const int overlap, int *start, int *end) {
-        int localsize = filesize/size;
-        *start = rank * localsize;
-        *end   = *start + localsize-1;
+        const int FIRST_LINE = sizeof(char) * 190;
+        const int relevant_filesize = filesize - FIRST_LINE;
+
+        const int lines = relevant_filesize / 87;
+
+        int localsize = (lines/size) * 87;
+        *start = FIRST_LINE + (rank * localsize);
+        *end   = FIRST_LINE + (*start + localsize-1);
 
         if (rank != 0)      *start -= overlap;
         if (rank != size-1) *end   += overlap;
