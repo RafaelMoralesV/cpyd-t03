@@ -78,9 +78,11 @@ int main(int argc, char* argv[]) {
         args.push_back(str);
     }
 
-    std::cout << "Integrantes: " << std::endl
-              << "\tRafael Morales Venegas" << std::endl
-              << "\tDiego Oyarce Trejo" << std::endl;
+    if(rank == 0) {
+        std::cout << "Integrantes: " << std::endl
+                  << "\tRafael Morales Venegas" << std::endl
+                  << "\tDiego Oyarce Trejo" << std::endl;
+    }
 
     config conf;
 
@@ -105,11 +107,17 @@ int main(int argc, char* argv[]) {
 
     switch (selected - modos.begin()) {
         case 0:
-            if(rank != 0) break;
+            if(rank != 0) {
+                MPI_Finalize();
+                return 0;
+            }
             reader = new SequentialInputReader(conf.input, conf.output);
             break;
         case 1:
-            if(rank != 0) break;
+            if(rank != 0) {
+                MPI_Finalize();
+                return 0;
+            }
             reader = new OpenMPInputReader(conf.input, conf.output);
             std::cout << "Selected: OpenMP" << std::endl;
             break;
