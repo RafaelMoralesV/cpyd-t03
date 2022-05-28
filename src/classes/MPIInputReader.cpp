@@ -7,7 +7,7 @@
 
 namespace cpyd {
     MPIInputReader::MPIInputReader(std::string &input, std::string &output)
-            : BaseInputReader(input, output) {
+            : BaseInputReader(input, output), m_Data(nullptr),  m_DataLen(0){
         m_rank = MPI::COMM_WORLD.Get_rank();
         m_size = MPI::COMM_WORLD.Get_size();
 
@@ -16,7 +16,25 @@ namespace cpyd {
         m_InputFile = m_InputFile.Open(MPI::COMM_WORLD, m_InputFilename.c_str(), MPI::MODE_RDONLY, m_Info);
     }
 
-    void MPIInputReader::partitionFile(const int overlap, int *start, int *end) const {
+    void MPIInputReader::readdataMPI() {
+        int start;
+        int end;
+
+        // figure out who reads what
+
+        partitionFile(&start, &end);
+
+        m_DataLen = end - start + 1;
+
+        // allocate memory
+        m_Data = new char[m_DataLen + 1];
+
+        // everyone reads in their part
+        m_InputFile.Read_at_all(MPI::Offset(start), m_Data, (int) m_DataLen, MPI::CHAR);
+        (m_Data)[m_DataLen] = '\0';
+    }
+
+    void MPIInputReader::partitionFile(int *start, int *end) const {
         const int FIRST_LINE = sizeof(char) * 190;
 
         const int relevant_filesize = (int) m_InputFile.Get_size() - FIRST_LINE;
@@ -27,26 +45,8 @@ namespace cpyd {
         *start = FIRST_LINE + (m_rank * localsize);
         *end = FIRST_LINE + (*start + localsize - 1);
 
-        if (m_rank != 0) *start -= overlap;
-        if (m_rank != m_size - 1) *end += overlap;
-    }
-
-    void MPIInputReader::readdataMPI(const int overlap, char **data, int *ndata) {
-        int start;
-        int end;
-
-        // figure out who reads what
-
-        partitionFile(overlap, &start, &end);
-
-        *ndata = end - start + 1;
-
-        // allocate memory
-        *data = new char[*ndata + 1];
-
-        // everyone reads in their part
-        m_InputFile.Read_at_all(MPI::Offset(start), *data, *ndata, MPI::CHAR);
-        (*data)[*ndata] = '\0';
+        if (m_rank != 0) *start -= OVERLAP;
+        if (m_rank != m_size - 1) *end += OVERLAP;
     }
 
     bool MPIInputReader::invalidInputFile() {
@@ -61,5 +61,12 @@ namespace cpyd {
         bool invalid = !file;
         file.close();
         return invalid;
+    }
+
+    MPIInputReader::~MPIInputReader() {
+        m_InputFile.Close();
+        m_Info.Free();
+
+        delete [] m_Data;
     }
 } // cpyd

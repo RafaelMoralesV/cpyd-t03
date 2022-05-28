@@ -8,13 +8,9 @@ namespace cpyd {
     MPINodeInputReader::MPINodeInputReader(std::string &input, std::string &output) : MPIInputReader(input, output) {}
 
     void MPINodeInputReader::readFile() {
-        const int overlap = 1;
-        char *data;
-        int ndata;
+        readdataMPI();
 
-        readdataMPI(overlap, &data, &ndata);
-
-        std::stringstream s(data), out, fault_string;
+        std::stringstream s(m_Data), out, fault_string;
         std::string row;
 
         while (std::getline(s, row)) {
@@ -26,9 +22,5 @@ namespace cpyd {
 
         std::string out_str = out.str();
         MPI::COMM_WORLD.Send(out_str.c_str(), (int) out_str.length() + 1, MPI_CHAR, 0, 0);
-
-        delete[] data;
-
-        m_InputFile.Close();
     }
 } // cpyd
