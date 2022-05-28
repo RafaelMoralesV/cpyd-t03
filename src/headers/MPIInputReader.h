@@ -21,8 +21,6 @@ namespace cpyd {
     public:
         MPIInputReader(std::string &input, std::string &output);
 
-        void readFile() override;
-
         void partitionFile(int overlap, int *start, int *end) const;
 
         void readdataMPI(int overlap, char **data, int *ndata);

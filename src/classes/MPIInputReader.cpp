@@ -16,50 +16,6 @@ namespace cpyd {
         m_InputFile = m_InputFile.Open(MPI::COMM_WORLD, m_InputFilename.c_str(), MPI::MODE_RDONLY, m_Info);
     }
 
-    void MPIInputReader::readFile() {
-        const int overlap = 1;
-        char *data;
-        int ndata;
-
-        readdataMPI(overlap, &data, &ndata);
-
-        std::cout << "MPI: Rank " << m_rank << " has " << ndata << " characters." << std::endl;
-
-        std::stringstream s(data), out, fault_string;
-        std::string row;
-
-        // El primer nodo siempre tiene la linea inicial, asi que vale la pena quitarsela nomas.
-        if (m_rank == 0) std::getline(s, row);
-        while (std::getline(s, row)) {
-            std::string word;
-            std::stringstream rowstream(row);
-
-            out << processRow(row) << std::endl;
-        }
-
-
-        if (m_rank != 0) {
-            std::string out_str = out.str();
-            MPI::COMM_WORLD.Send(out_str.c_str(), (int) out_str.length() + 1, MPI_CHAR, 0, 0);
-        } else {
-            std::ofstream outputfile(this->m_OutputFilename);
-            outputfile << out.str();
-            for (int source = 1; source < m_size; source++) {
-                char *buff = new char[ndata + 1];
-                MPI::COMM_WORLD.Recv(buff, ndata + 1, MPI_CHAR, source, 0);
-
-                outputfile << buff;
-                delete[] buff;
-            }
-
-            outputfile.close();
-        }
-
-        delete[] data;
-
-        m_InputFile.Close();
-    }
-
     void MPIInputReader::partitionFile(const int overlap, int *start, int *end) const {
         const int FIRST_LINE = sizeof(char) * 190;
 
