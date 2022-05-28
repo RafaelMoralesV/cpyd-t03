@@ -4,16 +4,16 @@
 
 #include "../headers/SequentialInputReader.h"
 
-using namespace cpyd;
+namespace cpyd {
+    SequentialInputReader::SequentialInputReader(std::string &input, std::string &output)
+            : InputReader(input, output) {}
 
-SequentialInputReader::SequentialInputReader(std::string & input, std::string & output)
-    : InputReader(input, output) { }
+    void SequentialInputReader::readFile() {
+        std::string line, word;
+        std::vector<std::string> row;
 
-void SequentialInputReader::readFile() {
-    std::string line, word;
-    std::vector<std::string> row;
-
-    while(std::getline(this->m_InputFileStream, line)){
-        m_OutputFileStream << processRow(line) << std::endl;
+        while (std::getline(this->m_InputFileStream, line)) {
+            m_OutputFileStream << processRow(line) << std::endl;
+        }
     }
 }
