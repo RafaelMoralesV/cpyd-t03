@@ -9,7 +9,7 @@ using namespace cpyd;
 struct config {
     std::string input;
     std::string output;
-    std::string mode;
+    long mode = -1;
 };
 
 config getConfig(std::vector<std::string> args){
@@ -62,6 +62,15 @@ config getConfig(std::vector<std::string> args){
         throw std::invalid_argument(excep_message.str());
     }
 
+    // Selected mode
+    auto mode_index = std::find(args.begin(), args.end(), "--modo");
+    std::string mode = mode_index == args.end() ? "secuencial" : mode_index[1];
+
+    std::vector<std::string> modos {"secuencial", "openmp", "mpi"};
+    auto selected = std::find(modos.begin(), modos.end(), mode);
+
+    conf.mode = selected - modos.begin();
+
     return conf;
 }
 
@@ -98,19 +107,13 @@ int main(int argc, char* argv[]) {
 
     InputReader* reader;
 
-    // Selected mode
-    auto mode_index = std::find(args.begin(), args.end(), "--modo");
-    std::string mode = mode_index == args.end() ? "secuencial" : mode_index[1];
-
-    std::vector<std::string> modos {"secuencial", "openmp", "mpi"};
-    auto selected = std::find(modos.begin(), modos.end(), mode);
-
-    switch (selected - modos.begin()) {
+    switch (conf.mode) {
         case 0:
             if(rank != 0) {
                 MPI_Finalize();
                 return 0;
             }
+            std::cout << "Modo: Secuencial" << std::endl;
             reader = new SequentialInputReader(conf.input, conf.output);
             break;
         case 1:
@@ -119,11 +122,11 @@ int main(int argc, char* argv[]) {
                 return 0;
             }
             reader = new OpenMPInputReader(conf.input, conf.output);
-            std::cout << "Selected: OpenMP" << std::endl;
+            std::cout << "Modo: OpenMP" << std::endl;
             break;
         case 2:
             reader = new MPIInputReader(conf.input, conf.output);
-            if (rank == 0) std::cout << "Selected: MPI" << std::endl;
+            if (rank == 0) std::cout << "Modo: MPI" << std::endl;
             break;
         default:
             if(rank == 0) {
