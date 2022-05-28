@@ -10,18 +10,29 @@
 
 namespace cpyd {
 
-    class MPIInputReader: public InputReader {
+    class MPIInputReader : public BaseInputReader {
     protected:
-        std::string m_input;
-        std::string m_output;
+        int m_rank;
+        int m_size;
+
+        MPI::Info m_Info;
+        MPI::File m_InputFile;
+
     public:
-        MPIInputReader(std::string & input, std::string & output);
+        MPIInputReader(std::string &input, std::string &output);
 
         void readFile() override;
+
+        void partitionFile(int overlap, int *start, int *end) const;
+
+        void readdataMPI(int overlap, char **data, int *ndata);
+
+        bool invalidInputFile() override;
+
+        bool invalidOutputFile() override;
     };
 
-    void partitionFile(int filesize, int rank, int size, int overlap, int *start, int *end);
-    void readdataMPI(MPI_File *in, int rank, int size, int overlap, char **data, int *ndata);
+
 } // cpyd
 
 #endif //CPYD_01_MPIINPUTREADER_H

@@ -6,38 +6,31 @@
 
 
 namespace cpyd {
-    MPIInputReader::MPIInputReader(std::string & input, std::string & output)
-        : InputReader(input, output), m_input(input), m_output(output){
-        this->m_InputFileStream.close();
-        this->m_OutputFileStream.close();
+    MPIInputReader::MPIInputReader(std::string &input, std::string &output)
+            : BaseInputReader(input, output) {
+        m_rank = MPI::COMM_WORLD.Get_rank();
+        m_size = MPI::COMM_WORLD.Get_size();
+
+        m_Info = m_Info.Create();
+        m_Info.Set("cb_config_list", "*:1");
+        m_InputFile = m_InputFile.Open(MPI::COMM_WORLD, m_InputFilename.c_str(), MPI::MODE_RDONLY, m_Info);
     }
 
     void MPIInputReader::readFile() {
-        MPI_File in;
-        int rank, size;
-
-        MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-        MPI_Comm_size(MPI_COMM_WORLD, &size);
-
-        MPI_Info info;
-        MPI_Info_create(&info);
-        MPI_Info_set(info, "cb_config_list","*:1");
-
-        MPI_File_open(MPI_COMM_WORLD, m_input.c_str(), MPI_MODE_RDONLY, info, &in);
-
-        const int overlap=1;
+        const int overlap = 1;
         char *data;
         int ndata;
-        readdataMPI(&in, rank, size, overlap, &data, &ndata);
 
-        std::cout << "MPI: Rank " << rank << " has " << ndata << " characters." << std::endl;
+        readdataMPI(overlap, &data, &ndata);
+
+        std::cout << "MPI: Rank " << m_rank << " has " << ndata << " characters." << std::endl;
 
         std::stringstream s(data), out, fault_string;
         std::string row;
 
         // El primer nodo siempre tiene la linea inicial, asi que vale la pena quitarsela nomas.
-        if(rank == 0) std::getline(s, row);
-        while(std::getline(s, row)){
+        if (m_rank == 0) std::getline(s, row);
+        while (std::getline(s, row)) {
             std::string word;
             std::stringstream rowstream(row);
 
@@ -45,63 +38,72 @@ namespace cpyd {
         }
 
 
-        if(rank != 0) {
+        if (m_rank != 0) {
             std::string out_str = out.str();
-            MPI_Send(out_str.c_str(), (int) out_str.length() + 1, MPI_CHAR, 0, 0, MPI_COMM_WORLD);
-        }
-        else {
-            std::ofstream outputfile(this->m_output);
+            MPI::COMM_WORLD.Send(out_str.c_str(), (int) out_str.length() + 1, MPI_CHAR, 0, 0);
+        } else {
+            std::ofstream outputfile(this->m_OutputFilename);
             outputfile << out.str();
-            for(int source = 1; source < size; source++) {
-                MPI_Status status;
-                char* buff = new char[ndata + 1];
-                MPI_Recv(buff, ndata + 1, MPI_CHAR, source, 0, MPI_COMM_WORLD, &status);
+            for (int source = 1; source < m_size; source++) {
+                char *buff = new char[ndata + 1];
+                MPI::COMM_WORLD.Recv(buff, ndata + 1, MPI_CHAR, source, 0);
 
                 outputfile << buff;
-                delete [] buff;
+                delete[] buff;
             }
 
             outputfile.close();
         }
 
-        delete [] data;
+        delete[] data;
 
-        MPI_File_close(&in);
-        MPI_Info_free(&info);
+        m_InputFile.Close();
     }
 
-    void partitionFile(const int filesize, const int rank, const int size, const int overlap, int *start, int *end) {
+    void MPIInputReader::partitionFile(const int overlap, int *start, int *end) const {
         const int FIRST_LINE = sizeof(char) * 190;
-        const int relevant_filesize = filesize - FIRST_LINE;
+
+        const int relevant_filesize = (int) m_InputFile.Get_size() - FIRST_LINE;
 
         const int lines = relevant_filesize / 87;
 
-        int localsize = (lines/size) * 87;
-        *start = FIRST_LINE + (rank * localsize);
-        *end   = FIRST_LINE + (*start + localsize-1);
+        int localsize = (lines / m_size) * 87;
+        *start = FIRST_LINE + (m_rank * localsize);
+        *end = FIRST_LINE + (*start + localsize - 1);
 
-        if (rank != 0)      *start -= overlap;
-        if (rank != size-1) *end   += overlap;
+        if (m_rank != 0) *start -= overlap;
+        if (m_rank != m_size - 1) *end += overlap;
     }
 
-    void readdataMPI(MPI_File *in, const int rank, const int size, const int overlap, char **data, int *ndata) {
-        MPI_Offset filesize;
+    void MPIInputReader::readdataMPI(const int overlap, char **data, int *ndata) {
         int start;
         int end;
 
         // figure out who reads what
 
-        MPI_File_get_size(*in, &filesize);
-        partitionFile((int)filesize, rank, size, overlap, &start, &end);
+        partitionFile(overlap, &start, &end);
 
-        *ndata =  end - start + 1;
+        *ndata = end - start + 1;
 
         // allocate memory
         *data = new char[*ndata + 1];
 
         // everyone reads in their part
-        MPI_File_read_at_all(*in, (MPI_Offset)start, *data,
-                             (int)(MPI_Offset)(*ndata), MPI_CHAR, MPI_STATUS_IGNORE);
+        m_InputFile.Read_at_all(MPI::Offset(start), *data, *ndata, MPI::CHAR);
         (*data)[*ndata] = '\0';
+    }
+
+    bool MPIInputReader::invalidInputFile() {
+        std::ifstream file(m_InputFilename);
+        bool invalid = !file;
+        file.close();
+        return invalid;
+    }
+
+    bool MPIInputReader::invalidOutputFile() {
+        std::ofstream file(m_OutputFilename);
+        bool invalid = !file;
+        file.close();
+        return invalid;
     }
 } // cpyd

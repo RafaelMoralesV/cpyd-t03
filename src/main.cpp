@@ -75,11 +75,9 @@ config getConfig(std::vector<std::string> args){
 }
 
 int main(int argc, char* argv[]) {
-    MPI_Init(&argc, &argv);
-    int rank, size;
+    MPI::Init();
 
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    int rank = MPI::COMM_WORLD.Get_rank();
 
     std::vector<std::string> args;
     for(int i = 1; i < argc; i++){
@@ -100,7 +98,7 @@ int main(int argc, char* argv[]) {
     catch (std::invalid_argument & e) {
         if(rank == 0) std::cout << e.what();
 
-        MPI_Finalize();
+        MPI::Finalize();
         return 1;
     }
 
@@ -110,7 +108,7 @@ int main(int argc, char* argv[]) {
     switch (conf.mode) {
         case 0:
             if(rank != 0) {
-                MPI_Finalize();
+                MPI::Finalize();
                 return 0;
             }
             std::cout << "Modo: Secuencial" << std::endl;
@@ -118,7 +116,7 @@ int main(int argc, char* argv[]) {
             break;
         case 1:
             if(rank != 0) {
-                MPI_Finalize();
+                MPI::Finalize();
                 return 0;
             }
             reader = new OpenMPInputReader(conf.input, conf.output);
@@ -134,26 +132,26 @@ int main(int argc, char* argv[]) {
                           << "Fijate que esté escrito totalmente en minúsculas y prueba de nuevo"
                           << std::endl;
             }
-            MPI_Finalize();
+            MPI::Finalize();
             return 1;
     }
 
     if(reader->invalidInputFile() && rank == 0){
         std::cout << "El archivo sugerido de input no existe!" << std::endl;
 
-        MPI_Finalize();
+        MPI::Finalize();
         return 1;
     }
 
     if(reader->invalidOutputFile() && rank == 0){
         std::cout << "El archivo sugerido de output es invalido!" << std::endl;
 
-        MPI_Finalize();
+        MPI::Finalize();
         return 1;
     }
 
     reader->readFile();
 
-    MPI_Finalize();
+    MPI::Finalize();
     return 0;
 }
