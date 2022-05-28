@@ -4,18 +4,16 @@
 
 #include "../headers/SequentialInputReader.h"
 
+using namespace cpyd;
+
 SequentialInputReader::SequentialInputReader(std::string & input, std::string & output)
     : InputReader(input, output) { }
 
 void SequentialInputReader::readFile() {
-    if(!this->csvFile.is_open()){
-        return;
-    }
-
     std::string line, word;
     std::vector<std::string> row;
 
-    while(std::getline(this->csvFile, line)){
-        output << processRow(line) << std::endl;
+    while(std::getline(this->m_InputFileStream, line)){
+        m_OutputFileStream << processRow(line) << std::endl;
     }
 }

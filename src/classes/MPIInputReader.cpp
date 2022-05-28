@@ -8,8 +8,8 @@
 namespace cpyd {
     MPIInputReader::MPIInputReader(std::string & input, std::string & output)
         : InputReader(input, output), m_input(input), m_output(output){
-        this->csvFile.close();
-        this->output.close();
+        this->m_InputFileStream.close();
+        this->m_OutputFileStream.close();
     }
 
     void MPIInputReader::readFile() {

@@ -13,24 +13,21 @@
 
 /**
  * Lector de archivo .csv secuencial. Al igual que el resto de lectores, escribe su resultado en un archivo
- * output.csv que existe en el mismo directorio que el archivo ejecutable.
+ * m_OutputFileStream.csv que existe en el mismo directorio que el archivo ejecutable.
  */
-class SequentialInputReader: public InputReader {
-public:
-    SequentialInputReader(std::string & input, std::string & output);
+namespace cpyd {
+    class SequentialInputReader : public InputReader {
+    public:
+        SequentialInputReader(std::string &input, std::string &output);
 
-    /**
-     * \brief Lector de archivo .csv secuencial
-     *
-     * Este lector del archivo lee de manera secuencial y con un solo núcleo. Esta alternativa no ocupa ninguna forma
-     * de paralelismo o concurrencia.
-     *
-     * @param none
-     *
-     * @returns void
-     */
-    void readFile() override;
-};
-
+        /**
+         * \brief Lector de archivo .csv secuencial
+         *
+         * Este lector del archivo lee de manera secuencial y con un solo núcleo. Esta alternativa no ocupa ninguna forma
+         * de paralelismo o concurrencia.
+         */
+        void readFile() override;
+    };
+}
 
 #endif //CPYD_01_SEQUENTIALINPUTREADER_H

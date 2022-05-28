@@ -10,7 +10,8 @@ add_executable(test-check
         src/classes/SequentialInputReader.cpp src/headers/SequentialInputReader.h
         src/classes/OpenMPInputReader.cpp src/headers/OpenMPInputReader.h
         src/classes/MPIInputReader.cpp src/headers/MPIInputReader.h
-        )
+        src/classes/BaseInputReader.cpp src/headers/BaseInputReader.h)
+
 find_package(OpenMP REQUIRED)
 find_package(MPI REQUIRED)
 target_link_libraries(test-check OpenMP::OpenMP_CXX MPI::MPI_CXX)

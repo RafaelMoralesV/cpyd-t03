@@ -105,7 +105,7 @@ int main(int argc, char* argv[]) {
     }
 
 
-    InputReader* reader;
+    BaseInputReader* reader;
 
     switch (conf.mode) {
         case 0:

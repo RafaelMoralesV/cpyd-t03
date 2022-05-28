@@ -15,8 +15,8 @@ namespace cpyd {
         // Buffer de 4000 lineas del csv.
         std::vector<char> buffer(ROW_LEN * CANT_ROWS, 0);
 
-        while(!csvFile.eof()){
-            csvFile.read(buffer.data(), (long) buffer.size());
+        while(!m_InputFileStream.eof()){
+            m_InputFileStream.read(buffer.data(), (long) buffer.size());
             std::stringstream buffer_stream(buffer.data());
 
             std::vector<std::string> rows (CANT_ROWS, "");
@@ -42,7 +42,7 @@ namespace cpyd {
                 s << row << "\n";
             }
 
-            output << s.str();
+            m_OutputFileStream << s.str();
 
             buffer = std::vector<char>(ROW_LEN * CANT_ROWS, 0);
         }

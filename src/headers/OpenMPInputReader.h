@@ -8,8 +8,6 @@
 #include "InputReader.h"
 #include<omp.h>
 
-#define ROW_LEN 87 * sizeof(char)
-
 namespace cpyd {
 
     class OpenMPInputReader: public InputReader {
