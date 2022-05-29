@@ -16,37 +16,31 @@ namespace cpyd {
         m_InputFile = m_InputFile.Open(MPI::COMM_WORLD, m_InputFilename.c_str(), MPI::MODE_RDONLY, m_Info);
     }
 
-    void MPIInputReader::readdataMPI() {
+    void MPIInputReader::readdataMPI(int chunk_number) {
         int start;
         int end;
 
-        // figure out who reads what
-
-        partitionFile(&start, &end);
+        partitionFile(chunk_number, &start, &end);
 
         m_DataLen = end - start + 1;
-
-        // allocate memory
         m_Data = new char[m_DataLen + 1];
 
-        // everyone reads in their part
         m_InputFile.Read_at_all(MPI::Offset(start), m_Data, (int) m_DataLen, MPI::CHAR);
         (m_Data)[m_DataLen] = '\0';
     }
 
-    void MPIInputReader::partitionFile(int *start, int *end) const {
-        const int FIRST_LINE = sizeof(char) * 190;
+    void MPIInputReader::partitionFile(int chunk_number, int *start, int *end) const {
 
-        const int relevant_filesize = (int) m_InputFile.Get_size() - FIRST_LINE;
+        int chunk_start = FIRST_LINE_LEN + CHUNK_SIZE * chunk_number;
 
-        const int lines = relevant_filesize / 87;
+        int localsize = CHUNK_SIZE / m_size;
+        *start = chunk_start + (m_rank * localsize);
+        *end = *start + localsize - 1;
 
-        int localsize = (lines / m_size) * 87;
-        *start = FIRST_LINE + (m_rank * localsize);
-        *end = FIRST_LINE + (*start + localsize - 1);
+        int last_byte = (int) m_InputFile.Get_size();
 
-        if (m_rank != 0) *start -= OVERLAP;
-        if (m_rank != m_size - 1) *end += OVERLAP;
+        if(*start > last_byte) *start = last_byte;
+        if(*end > last_byte) *end = last_byte;
     }
 
     bool MPIInputReader::invalidInputFile() {

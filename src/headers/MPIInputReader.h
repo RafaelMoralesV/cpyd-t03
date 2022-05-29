@@ -8,7 +8,17 @@
 #include "InputReader.h"
 #include <mpi.h>
 
-#define OVERLAP 1
+/**
+ * 30,030 es divisible por 2, 3, 5, 7, 11, y 13
+ * por lo que procesar una cantidad de lineas que sea un factor de este numero
+ * hace que dividirlo en una cantidad de procesos sea muy poco problematico.
+ *
+ * En general, no deberia haber problema hasta que se spawneen una cantidad extraña de procesos, como 17, por ejemplo.
+ */
+#define CANT_ROWS 90090
+
+#define CHUNK_SIZE (CANT_ROWS * ROW_LEN)
+
 
 namespace cpyd {
 
@@ -26,7 +36,7 @@ namespace cpyd {
         /**
          * Lee el archivo de entrada y carga en m_Data los datos leidos.
          */
-        void readdataMPI();
+        void readdataMPI(int chunk_number);
 
         /**
          * Consigue un trozo del archivo que debe leer el proceso, y escribe en los parametros 'start' y 'end'
@@ -35,7 +45,7 @@ namespace cpyd {
          * @param start [int] Bite de inicio de lectura a ser conseguido
          * @param end [int] Ultimo bite del archivo a ser leido
          */
-        void partitionFile(int *start, int *end) const;
+        void partitionFile(int chunk_number, int *start, int *end) const;
     public:
         /**
          * \brief Constructor
@@ -50,7 +60,7 @@ namespace cpyd {
          * \brief Destructor
          * Cierra el archivo y libera el buffer de lectura.
          */
-        virtual ~MPIInputReader();
+        ~MPIInputReader();
 
         /**
          * Implementa la funcion que verifica si el archivo de entrada es invalido
