@@ -21,16 +21,35 @@
 
 
 namespace cpyd {
-
+    /**
+     *  Implementación NO basada en std::filestreams. Debido a que en MPI es ligeramente más
+     *  sencillo trabajar en su propio tipo de datos [MPI::File], generamos esta clase que se
+     *  encarga de:
+     *      - Abrir el archivo de Input.
+     *      - Particionar el archivo para cada proceso.
+     *      - Leer el archivo.
+     *      - Cerrar y Limpiar lo que reste.
+     *
+     *  Esta clase no implementa readFile, por lo que no es instanciable.
+     */
     class MPIInputReader : public BaseInputReader {
     protected:
+        /** Rango del proceso */
         int m_rank;
+
+        /** Cantidad de procesos */
         int m_size;
 
+        /** MPI::Info Object, necesario para el archivo de entrada */
         MPI::Info m_Info;
+
+        /** Archivo de entrada */
         MPI::File m_InputFile;
 
+        /** Bytes leídos del archivo de entrada */
         char* m_Data;
+
+        /** Cantidad de bytes leídos */
         unsigned long m_DataLen;
 
         /**
@@ -42,6 +61,7 @@ namespace cpyd {
          * Consigue un trozo del archivo que debe leer el proceso, y escribe en los parametros 'start' y 'end'
          * los bytes de inicio y fin de este trozo.
          *
+         * @param chunk_number [int] Numero del trozo de archivo que se desea particionar
          * @param start [int] Bite de inicio de lectura a ser conseguido
          * @param end [int] Ultimo bite del archivo a ser leido
          */

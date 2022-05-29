@@ -5,7 +5,11 @@
 #include "../headers/MPINodeInputReader.h"
 
 namespace cpyd {
-    MPINodeInputReader::MPINodeInputReader(std::string &input, std::string &output) : MPIInputReader(input, output) {}
+    MPINodeInputReader::MPINodeInputReader(std::string &input, std::string &output) : MPIInputReader(input, output) {
+        if(m_rank == 0) {
+            throw std::logic_error("Esta clase debe ser instanciada solo por los procesos adicionales");
+        }
+    }
 
     void MPINodeInputReader::readFile() {
         int chunk = 0;

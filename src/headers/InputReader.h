@@ -11,6 +11,11 @@
 #include "BaseInputReader.h"
 
 namespace cpyd {
+    /**
+     * Implementación basada en std::filestreams, utilizada para algoritmos secuenciales y OpenMP.
+     * Esta clase básica no implementa readFile, por lo que no es instanciable, sino que se encarga de
+     * la creacion y cierre de un input file stream y output file stream.
+     */
     class InputReader : public BaseInputReader {
     protected:
         InputReader(std::string &inputFilename, std::string &outputFilename);

@@ -5,7 +5,11 @@
 #include "../headers/MPIHostInputReader.h"
 
 namespace cpyd {
-    MPIHostInputReader::MPIHostInputReader(std::string &input, std::string &output) : MPIInputReader(input, output) {}
+    MPIHostInputReader::MPIHostInputReader(std::string &input, std::string &output) : MPIInputReader(input, output) {
+        if(m_rank != 0) {
+            throw std::logic_error("Esta clase debe ser instanciada solo por el proceso principal");
+        }
+    }
 
     void MPIHostInputReader::readFile() {
         int chunk = 0;

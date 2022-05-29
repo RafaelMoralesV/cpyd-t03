@@ -11,20 +11,21 @@
 #include <iostream>
 #include <sstream>
 
-/**
- * Lector de archivo .csv secuencial. Al igual que el resto de lectores, escribe su resultado en un archivo
- * m_OutputFileStream.csv que existe en el mismo directorio que el archivo ejecutable.
- */
 namespace cpyd {
+    /**
+     * Lector de archivo .csv secuencial.
+     * No hay mucha magia ocurriendo aca. Obtengo una linea desde mi ifstream, la proceso, y la escribo a mi ofstream.
+     */
     class SequentialInputReader : public InputReader {
     public:
+        /** \brief Constructor */
         SequentialInputReader(std::string &input, std::string &output);
 
         /**
          * \brief Lector de archivo .csv secuencial
          *
-         * Este lector del archivo lee de manera secuencial y con un solo núcleo. Esta alternativa no ocupa ninguna forma
-         * de paralelismo o concurrencia.
+         * Este lector del archivo lee de manera secuencial y con un solo núcleo. Esta alternativa no ocupa ninguna
+         * forma de paralelismo o concurrencia.
          */
         void readFile() override;
     };
