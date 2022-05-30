@@ -27,24 +27,32 @@ Esto producirá un archivo binario dentro de la carpeta build con el nombre "tes
 Puede copiar el archivo con el nombre y a la carpeta que necesite y utilizarlo desde ahí
 
 ## Uso
-### Ejemplo simple
-Ejecutar el programa de manera secuencial sobre el archivo pruebas.csv, y producir un resultado llamado output.csv
+### Argumentos necesarios
+El programa requiere de dos argumentos. <input file> representa la ruta al archivo de entrada. <output file>, la ruta al archivo de salida deseado
 ```console
-test-check --file pruebas.csv
+test-check <input file> <output file>  # Argumentos requeridos
 ```
 
 ### Ejemplo output personalizado
 Ejecutar el programa de manera secuencial sobre el archivo pruebas.csv, y producir un archivo resultado de nombre foo.csv
 ```console
-test-check --file pruebas.csv --out foo.csv
+test-check pruebas.csv foo.csv --modo secuencial # "--modo secuencial" es opcional para la ejecucion de forma secuencial.
 ```
 
 ### Ejemplo utilizando openmp o mpi
 Ejecuta el programa en hilos paralelos o de manera distrubuida, y producir un resultado llamado output.csv
 ```console
-test-check --file pruebas.csv --modo openmp
-test-check --file pruebas.csv --modo mpi
+test-check pruebas.csv resultado.csv --modo openmp
+test-check pruebas.csv resultado.csv --modo mpi
 ```
 
-### Errores
-La implementación de MPI aún no está lista, y crasheará el programa en ejecución.
+## Jerarquía
+Existen un total de siete clases dispuestas en la siguiente Jerarquía. Las razones de esta jerarquia se explica en los archivos .h de cada clase.
+ - BaseInputReader
+   - InputReader
+     - SecuentialInputReader  # Ejecuta el modo secuencial
+     - OpenMPInputReader      # Ejecuta el modo openmp
+   - MPIInputReader
+     - MPIHostInputReader     # Ejecuta el modo mpi con rango 0
+     - MPINodeInputReader     # Ejecuta el modo mpi con rango distinto de 0
+ 
