@@ -12,7 +12,7 @@ namespace cpyd {
 
     void OpenMPInputReader::readFile() {
         const unsigned int CANT_ROWS = 100000;
-        // Buffer de 4000 lineas del csv.
+        // Buffer de 100,000 lineas del csv.
         std::vector<char> buffer(ROW_LEN * CANT_ROWS, 0);
 
         while (!m_InputFileStream.eof()) {
