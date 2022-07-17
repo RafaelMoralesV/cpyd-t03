@@ -19,35 +19,42 @@ namespace cpyd {
 
         std::string word;
         std::string uuid;
-        int correctas = 0, incorrectas = 0, omitidas = 0;
-        double puntaje, nota;
+
+        double puntaje_math = 0, puntaje_stem = 0, puntaje_hum = 0;
+
         std::getline(stream, uuid, ';');
         for (int i = 1; i < COLUMNAS; i++) {
             std::getline(stream, word, ';');
 
             if (word == "\"-\"") {
-                omitidas++;
                 continue;
             }
 
-            bool correcta = word[1] == respuestas[i - 1];
-            correctas += (int) correcta;
-            incorrectas += (int) !correcta;
+            int correcta = (int)(word[1] == respuestas[i - 1]);
+            switch ((i - 1) / 3) {
+                case 0:
+                    puntaje_math += correcta * PUNTAJE_CORRECTA - correcta * PUNTAJE_INCORRECTA;
+                    break;
+                case 1:
+                    puntaje_stem += correcta * PUNTAJE_CORRECTA - correcta * PUNTAJE_INCORRECTA;
+                    break;
+                case 2:
+                    puntaje_hum += correcta * PUNTAJE_CORRECTA - correcta * PUNTAJE_INCORRECTA;
+                    break;
+                default:
+                    break;
+            }
         }
 
-        puntaje = correctas * PUNTAJE_CORRECTA - incorrectas * PUNTAJE_INCORRECTA;
-        nota = puntaje > 0 ? 1 + puntaje : 1;
-
-        nota = round(nota * 10) / 10.0;
+        double puntaje = puntaje_math + puntaje_stem + puntaje_hum;
 
         std::stringstream out;
 
-        out << uuid << ','
-            << correctas << ','
-            << incorrectas << ','
-            << omitidas << ','
-            << puntaje << ','
-            << nota;
+        out << uuid << ';'
+            << puntaje_math << ';'
+            << puntaje_stem << ';'
+            << puntaje_hum << ';'
+            << puntaje;
         return out.str();
     }
 }
