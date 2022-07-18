@@ -1,5 +1,5 @@
-# cpyd-t01
-Trabajo 1 para Computación paralela y distribuida, primer semestre 2022.
+# cpyd-t03
+Taller 3 para Computación paralela y distribuida, primer semestre 2022.
 
 ## Integrantes
 - Rafael Morales Venegas
@@ -50,11 +50,11 @@ test-check pruebas.csv --modo mpi
 Existen un total de siete clases dispuestas en la siguiente Jerarquía. Las razones de esta jerarquia se explica en los archivos .h de cada clase.
  - BaseInputReader
    - InputReader
-     - SecuentialInputReader   # Ejecuta el modo secuencial
-     - OpenMPInputReader       # Ejecuta el modo openmp
+     - SecuentialInputReader  # Ejecuta el modo secuencial
+     - OpenMPInputReader      # Ejecuta el modo openmp
    - MPIInputReader
-     - MPIHostInputReader      # Ejecuta el modo mpi con rango 0
-     - MPINodeInputReader      # Ejecuta el modo mpi con rango distinto de 0
+     - MPIHostInputReader     # Ejecuta el modo mpi con rango 0
+     - MPINodeInputReader     # Ejecuta el modo mpi con rango distinto de 0
      
 Existen además, dos clases nuevas en la carpeta de Models.
 - Resultado: Es un objeto que representa los resultados de un intento.
