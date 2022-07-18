@@ -18,7 +18,7 @@ namespace cpyd {
     class OpenMPInputReader: public InputReader {
     public:
         /** \brief Constructor */
-        OpenMPInputReader(std::string & input, std::string & output);
+        explicit OpenMPInputReader(std::string & input);
 
         /**
          * \brief Lector de archivo .csv con OpenMP

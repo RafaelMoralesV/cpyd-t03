@@ -5,8 +5,8 @@
 #include "../headers/BaseInputReader.h"
 
 namespace cpyd {
-    BaseInputReader::BaseInputReader(std::string &inputFilename, std::string &outputFilename)
-            : m_InputFilename(inputFilename), m_OutputFilename(outputFilename) {}
+    BaseInputReader::BaseInputReader(std::string &inputFilename)
+            : m_InputFilename(inputFilename) {}
 
 
     std::string BaseInputReader::processRow(std::string &row) {

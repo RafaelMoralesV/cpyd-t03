@@ -72,9 +72,8 @@ namespace cpyd {
          * Abre el archivo de Input, y consigue el Rango y Cantidad de procesos
          *
          * @param input [std::string] Direccion al archivo de entrada
-         * @param output [std::string] Direccion del archivo de salida
          */
-        MPIInputReader(std::string &input, std::string &output);
+        explicit MPIInputReader(std::string &input);
 
         /**
          * \brief Destructor
@@ -88,13 +87,6 @@ namespace cpyd {
          * @return true, en caso de ser invalido
          */
         bool invalidInputFile() override;
-
-        /**
-         * Implementa la funcion que verifica si el archivo de salida es invalido
-         *
-         * @return true, en caso de ser invalido
-         */
-        bool invalidOutputFile() override;
     };
 
 

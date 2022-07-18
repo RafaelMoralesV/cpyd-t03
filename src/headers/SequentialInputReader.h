@@ -20,7 +20,7 @@ namespace cpyd {
     class SequentialInputReader : public InputReader {
     public:
         /** \brief Constructor */
-        SequentialInputReader(std::string &input, std::string &output);
+        explicit SequentialInputReader(std::string &input);
 
         /**
          * \brief Lector de archivo .csv secuencial

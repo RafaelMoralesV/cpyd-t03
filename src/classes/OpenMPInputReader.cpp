@@ -7,8 +7,8 @@
 #include "../headers/OpenMPInputReader.h"
 
 namespace cpyd {
-    OpenMPInputReader::OpenMPInputReader(std::string &input, std::string &output)
-            : InputReader(input, output) {}
+    OpenMPInputReader::OpenMPInputReader(std::string &input)
+            : InputReader(input) {}
 
     void OpenMPInputReader::readFile() {
         const unsigned int CANT_ROWS = 100000;
@@ -42,7 +42,7 @@ namespace cpyd {
                 s << row << "\n";
             }
 
-            m_OutputFileStream << s.str();
+            m_MathOFStream << s.str();
 
             buffer = std::vector<char>(ROW_LEN * CANT_ROWS, 0);
         }

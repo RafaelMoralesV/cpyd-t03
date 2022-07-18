@@ -18,7 +18,7 @@ namespace cpyd {
          * \brief Constructor
          * @throws std::logic_error en caso de ser instanciada por proceso con rango igual a 0
          */
-        MPINodeInputReader(std::string &input, std::string &output);
+        explicit MPINodeInputReader(std::string &input);
 
         /**
          * Procesa el archivo, luego envia el resultado hacia el proceso principal

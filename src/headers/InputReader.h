@@ -18,14 +18,15 @@ namespace cpyd {
      */
     class InputReader : public BaseInputReader {
     protected:
-        InputReader(std::string &inputFilename, std::string &outputFilename);
+        explicit InputReader(std::string &inputFilename);
 
         std::ifstream m_InputFileStream;
-        std::ofstream m_OutputFileStream;
+
+        std::ofstream m_MathOFStream;
+        std::ofstream m_StemOFStream;
+        std::ofstream m_HumOFStream;
     public:
         bool invalidInputFile() override;
-
-        bool invalidOutputFile() override;
 
         ~InputReader();
     };

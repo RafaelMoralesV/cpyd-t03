@@ -9,7 +9,6 @@ using namespace cpyd;
 
 struct config {
     std::string input;
-    std::string output;
     long mode = -1;
 };
 
@@ -25,9 +24,8 @@ config getConfig(std::vector<std::string> args) {
                           << std::endl;
         }
 
-        excep_message << "El programa requiere 2 argumentos posicionales: " << std::endl
+        excep_message << "El programa requiere 1 argumento posicional: " << std::endl
                       << "<file>, que es la ruta de un archivo .csv de entrada" << std::endl
-                      << "<output>, que es la ruta de un archivo .csv de salida" << std::endl << std::endl
 
                       << "Adicionalmente hay un argumento opcional, que adopta uno de tres valores: " << std::endl
                       << "--modo [secuencial|openmp|mpi] (Default: secuencial)" << std::endl
@@ -35,31 +33,24 @@ config getConfig(std::vector<std::string> args) {
                       << std::endl
                       << "\tPor defecto, este programa ejecuta el modo secuencial." << std::endl << std::endl
 
-                      << "Ejemplo: test-check ./pruebas.csv ./output.csv --modo openmp" << std::endl;
+                      << "Ejemplo: test-check ./pruebas.csv --modo openmp" << std::endl;
 
         throw std::invalid_argument(excep_message.str());
     }
 
     // No se han enviado argumentos.
-    if (args.size() < 2) {
+    if (args.empty()) {
         excep_message << "ERROR: Muy pocos parametros." << std::endl
-                      << "Utilización: ./test-check <file> <output>" << std::endl
+                      << "Utilización: ./test-check <file>" << std::endl
                       << "Utiliza --help para más información." << std::endl;
 
         throw std::invalid_argument(excep_message.str());
     }
 
     conf.input = args[0];
-    conf.output = args[1];
 
     if (conf.input.compare(conf.input.length() - 4, 4, ".csv") != 0) {
         excep_message << "El archivo de INPUT debe terminar en '.csv'!" << std::endl;
-
-        throw std::invalid_argument(excep_message.str());
-    }
-
-    if (conf.output.compare(conf.output.length() - 4, 4, ".csv") != 0) {
-        excep_message << "El archivo de OUTPUT debe terminar en '.csv'!" << std::endl;
 
         throw std::invalid_argument(excep_message.str());
     }
@@ -114,21 +105,21 @@ int main(int argc, char *argv[]) {
                 return 0;
             }
             std::cout << "Modo: Secuencial" << std::endl;
-            reader = new SequentialInputReader(conf.input, conf.output);
+            reader = new SequentialInputReader(conf.input);
             break;
         case 1:
             if (rank != 0) {
                 MPI::Finalize();
                 return 0;
             }
-            reader = new OpenMPInputReader(conf.input, conf.output);
+            reader = new OpenMPInputReader(conf.input);
             std::cout << "Modo: OpenMP" << std::endl;
             break;
         case 2:
             if (rank == 0) {
                 std::cout << "Modo: MPI" << std::endl;
-                reader = new MPIHostInputReader(conf.input, conf.output);
-            } else { reader = new MPINodeInputReader(conf.input, conf.output); }
+                reader = new MPIHostInputReader(conf.input);
+            } else { reader = new MPINodeInputReader(conf.input); }
             break;
         default:
             if (rank == 0) {
@@ -142,13 +133,6 @@ int main(int argc, char *argv[]) {
 
     if (reader->invalidInputFile() && rank == 0) {
         std::cout << "El archivo sugerido de input no existe!" << std::endl;
-
-        MPI::Finalize();
-        return 1;
-    }
-
-    if (reader->invalidOutputFile() && rank == 0) {
-        std::cout << "El archivo sugerido de output es invalido!" << std::endl;
 
         MPI::Finalize();
         return 1;

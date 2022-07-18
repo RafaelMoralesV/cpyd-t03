@@ -5,8 +5,8 @@
 #include "../headers/SequentialInputReader.h"
 
 namespace cpyd {
-    SequentialInputReader::SequentialInputReader(std::string &input, std::string &output)
-            : InputReader(input, output) {}
+    SequentialInputReader::SequentialInputReader(std::string &input)
+            : InputReader(input) {}
 
     void SequentialInputReader::readFile() {
         const unsigned int CANT_ROWS = 100000;
@@ -51,6 +51,6 @@ namespace cpyd {
         for(auto &ress: res){
             s << ress.math_output() << '\n';
         }
-        m_OutputFileStream << s.str();
+        m_MathOFStream << s.str();
     }
 }

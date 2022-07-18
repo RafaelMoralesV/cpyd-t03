@@ -5,7 +5,7 @@
 #include "../headers/MPIHostInputReader.h"
 
 namespace cpyd {
-    MPIHostInputReader::MPIHostInputReader(std::string &input, std::string &output) : MPIInputReader(input, output) {
+    MPIHostInputReader::MPIHostInputReader(std::string &input) : MPIInputReader(input) {
         if(m_rank != 0) {
             throw std::logic_error("Esta clase debe ser instanciada solo por el proceso principal");
         }
@@ -13,7 +13,7 @@ namespace cpyd {
 
     void MPIHostInputReader::readFile() {
         int chunk = 0;
-        std::ofstream outputfile(this->m_OutputFilename);
+        std::ofstream outputfile("./matematicas.csv");
 
         while (chunk * CHUNK_SIZE < m_InputFile.Get_size()) {
             readdataMPI(chunk++);

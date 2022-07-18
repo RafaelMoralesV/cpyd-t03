@@ -19,7 +19,7 @@ namespace cpyd {
          * \brief Constructor
          * @throws std::logic_error en caso de ser instanciada por proceso con rango distinto de 0
          */
-        MPIHostInputReader(std::string &input, std::string &output);
+        explicit MPIHostInputReader(std::string &input);
 
         /**
          * Procesa el archivo, luego recibe lo que el resto de procesos ha procesado

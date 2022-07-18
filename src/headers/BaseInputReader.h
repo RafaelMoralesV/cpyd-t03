@@ -33,16 +33,14 @@ namespace cpyd{
     class BaseInputReader {
     protected:
         std::string m_InputFilename;
-        std::string m_OutputFilename;
 
     public:
         /**
          * \brief Constructor base
          *
          * @param inputFilename [std::string] Ruta o Nombre del archivo .csv a procesar
-         * @param outputFilename [std::string] Ruta o Nombre del archivo .csv de salida
          */
-        BaseInputReader(std::string &inputFilename, std::string &outputFilename);
+        explicit BaseInputReader(std::string &inputFilename);
 
 
         /**
@@ -72,13 +70,6 @@ namespace cpyd{
          * @return true, si el archivo de entrada es inaccesible
          */
         virtual bool invalidInputFile() = 0;
-
-        /**
-         * \brief Verifica si el archivo de salida es invalido
-         *
-         * @return true, si el archivo de salida es inaccesible
-         */
-        virtual bool invalidOutputFile() = 0;
     };
 }
 

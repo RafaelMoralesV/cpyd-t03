@@ -6,8 +6,8 @@
 
 
 namespace cpyd {
-    MPIInputReader::MPIInputReader(std::string &input, std::string &output)
-            : BaseInputReader(input, output), m_Data(nullptr),  m_DataLen(0){
+    MPIInputReader::MPIInputReader(std::string &input)
+            : BaseInputReader(input), m_Data(nullptr),  m_DataLen(0){
         m_rank = MPI::COMM_WORLD.Get_rank();
         m_size = MPI::COMM_WORLD.Get_size();
 
@@ -45,13 +45,6 @@ namespace cpyd {
 
     bool MPIInputReader::invalidInputFile() {
         std::ifstream file(m_InputFilename);
-        bool invalid = !file;
-        file.close();
-        return invalid;
-    }
-
-    bool MPIInputReader::invalidOutputFile() {
-        std::ofstream file(m_OutputFilename);
         bool invalid = !file;
         file.close();
         return invalid;
