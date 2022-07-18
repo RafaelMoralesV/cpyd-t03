@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
     reader->readFile();
 
     // perdon profe
-    Sorter::sort();
+    if(rank == 0) Sorter::sort();
 
     MPI::Finalize();
     return 0;
