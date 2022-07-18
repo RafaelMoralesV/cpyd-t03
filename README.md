@@ -15,8 +15,8 @@ Para Ubuntu y distribuciones similares, se puede instalar utilizando el siguient
 
 Para poder compilar el archivo, se requieren de los siguientes comandos:
 ```bash
-git clone https://github.com/RafaelMoralesV/cpyd-t01  # Clonar el repositorio
-cd cpyd-t01
+git clone https://github.com/RafaelMoralesV/cpyd-t03  # Clonar el repositorio
+cd cpyd-t03
 mkdir build                                           # Crear carpeta para la compilacion
 cd build
 cmake ..                                              # Construir el proyecto con CMake
@@ -28,31 +28,35 @@ Puede copiar el archivo con el nombre y a la carpeta que necesite y utilizarlo d
 
 ## Uso
 ### Argumentos necesarios
-El programa requiere de dos argumentos. <input file> representa la ruta al archivo de entrada. <output file>, la ruta al archivo de salida deseado
+El programa requiere de un argumento; <input file> representa la ruta al archivo de entrada.
 ```console
-test-check <input file> <output file>  # Argumentos requeridos
+test-check <input file>  # Argumentos requeridos
 ```
 
 ### Ejemplo output personalizado
 Ejecutar el programa de manera secuencial sobre el archivo pruebas.csv, y producir un archivo resultado de nombre foo.csv
 ```console
-test-check pruebas.csv foo.csv --modo secuencial # "--modo secuencial" es opcional para la ejecucion de forma secuencial.
+test-check pruebas.csv --modo secuencial # "--modo secuencial" es opcional para la ejecucion de forma secuencial.
 ```
 
 ### Ejemplo utilizando openmp o mpi
 Ejecuta el programa en hilos paralelos o de manera distrubuida, y producir un resultado llamado output.csv
 ```console
-test-check pruebas.csv resultado.csv --modo openmp
-test-check pruebas.csv resultado.csv --modo mpi
+test-check pruebas.csv --modo openmp
+test-check pruebas.csv --modo mpi
 ```
 
 ## Jerarquía
 Existen un total de siete clases dispuestas en la siguiente Jerarquía. Las razones de esta jerarquia se explica en los archivos .h de cada clase.
  - BaseInputReader
    - InputReader
-     - SecuentialInputReader  # Ejecuta el modo secuencial
-     - OpenMPInputReader      # Ejecuta el modo openmp
+     - SecuentialInputReader   # Ejecuta el modo secuencial
+     - OpenMPInputReader       # Ejecuta el modo openmp
    - MPIInputReader
-     - MPIHostInputReader     # Ejecuta el modo mpi con rango 0
-     - MPINodeInputReader     # Ejecuta el modo mpi con rango distinto de 0
+     - MPIHostInputReader      # Ejecuta el modo mpi con rango 0
+     - MPINodeInputReader      # Ejecuta el modo mpi con rango distinto de 0
+     
+Existen además, dos clases nuevas en la carpeta de Models.
+- Resultado: Es un objeto que representa los resultados de un intento.
+- Sorter: Genera los archivos de output para cada evaluación, y los ordena.
  
