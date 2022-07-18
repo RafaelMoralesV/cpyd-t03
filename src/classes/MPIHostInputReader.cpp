@@ -13,7 +13,7 @@ namespace cpyd {
 
     void MPIHostInputReader::readFile() {
         int chunk = 0;
-        std::ofstream outputfile("./matematicas.csv");
+        std::ofstream outputfile("./aux.csv");
 
         while (chunk * CHUNK_SIZE < m_InputFile.Get_size()) {
             readdataMPI(chunk++);

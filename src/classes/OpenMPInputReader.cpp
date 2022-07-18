@@ -42,7 +42,7 @@ namespace cpyd {
                 s << row << "\n";
             }
 
-            m_MathOFStream << s.str();
+            m_auxOFStream << s.str();
 
             buffer = std::vector<char>(ROW_LEN * CANT_ROWS, 0);
         }

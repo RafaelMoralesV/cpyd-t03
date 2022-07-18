@@ -13,7 +13,7 @@ add_executable(test-check
         src/classes/MPIHostInputReader.cpp      src/headers/MPIHostInputReader.h
         src/classes/MPINodeInputReader.cpp      src/headers/MPINodeInputReader.h
         src/models/Resultado.cpp                src/headers/Resultado.h
-        )
+        src/models/Sorter.cpp src/headers/Sorter.h)
 
 find_package(OpenMP REQUIRED)
 find_package(MPI REQUIRED)

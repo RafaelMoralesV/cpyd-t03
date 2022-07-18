@@ -7,6 +7,7 @@ namespace cpyd {
     InputReader::InputReader(std::string &inputFilename)
             : BaseInputReader(inputFilename),
               m_InputFileStream(inputFilename),
+              m_auxOFStream("./aux.csv"),
               m_MathOFStream("./matematicas.csv"),
               m_StemOFStream("./ciencias.csv"),
               m_HumOFStream("./humanidades.csv") {

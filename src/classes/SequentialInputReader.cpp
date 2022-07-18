@@ -25,32 +25,16 @@ namespace cpyd {
                 std::getline(buffer_stream, row);
             }
 
+            std::stringstream s;
             for (auto &row: rows) {
                 if (row.empty()) {
                     continue;
                 }
-                row = processRow(row);
-                res.emplace_back(row);
+                s << processRow(row)<< std::endl;
             }
 
+            m_auxOFStream << s.str();
             buffer = std::vector<char>(ROW_LEN * CANT_ROWS, 0);
-//            res = std::vector<Resultado>();
         }
-        std::sort(res.begin(), res.end(),
-                  [](const auto& first, const auto& other){
-                      if(first.m_puntaje_math < other.m_puntaje_math){
-                          return false;
-                      }
-
-                      return other.m_puntaje_math < first.m_puntaje_math;
-                  });
-        std::stringstream s;
-
-        std::string asdf = "dfg;0;0;0;0";
-        res.resize(1000000, Resultado(asdf));
-        for(auto &ress: res){
-            s << ress.math_output() << '\n';
-        }
-        m_MathOFStream << s.str();
     }
 }

@@ -22,6 +22,8 @@ namespace cpyd {
 
         std::ifstream m_InputFileStream;
 
+        std::ofstream m_auxOFStream;
+
         std::ofstream m_MathOFStream;
         std::ofstream m_StemOFStream;
         std::ofstream m_HumOFStream;
