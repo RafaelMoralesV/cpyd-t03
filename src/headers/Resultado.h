@@ -11,22 +11,17 @@
 namespace cpyd {
 
     class Resultado {
-    private:
+    protected:
+        Resultado();
+
+    public:
         std::string m_uuid;
         double m_puntaje;
         double m_puntaje_math;
         double m_puntaje_stem;
         double m_puntaje_hum;
 
-    protected:
-        Resultado();
-
-    public:
         explicit Resultado(std::string &output_string);
-
-        inline bool did_better_in_math(Resultado &other) const;
-        inline bool did_better_in_stem(Resultado &other) const;
-        inline bool did_better_in_hum(Resultado &other) const;
 
         [[nodiscard]] std::string math_output() const;
         [[nodiscard]] std::string stem_output() const;

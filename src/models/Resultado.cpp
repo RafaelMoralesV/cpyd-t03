@@ -49,29 +49,6 @@ namespace cpyd {
         return m_puntaje;
     }
 
-    /**************** COMPARADORES ****************/
-    inline bool Resultado::did_better_in_math(Resultado &other) const {
-        if(this->getPuntajeMath() < other.getPuntajeMath()){
-            return false;
-        }
-
-        return other.getPuntaje() < this->getPuntaje();
-    }
-
-    inline bool Resultado::did_better_in_stem(Resultado &other) const {
-        if(this->getPuntajeStem() < other.getPuntajeStem()){
-            return false;
-        }
-        return other.getPuntaje() < this->getPuntaje();
-    }
-
-    inline bool Resultado::did_better_in_hum(Resultado &other) const {
-        if(this->getPuntajeHum() < other.getPuntajeHum()){
-            return false;
-        }
-        return other.getPuntaje() < this->getPuntaje();
-    }
-
     /**************** OUTPUT STRINGS ****************/
     std::string Resultado::math_output() const {
         std::stringstream output;

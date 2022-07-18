@@ -33,13 +33,13 @@ namespace cpyd {
             int correcta = (int)(word[1] == respuestas[i - 1]);
             switch ((i - 1) / 3) {
                 case 0:
-                    puntaje_math += correcta * PUNTAJE_CORRECTA - correcta * PUNTAJE_INCORRECTA;
+                    puntaje_math += correcta * PUNTAJE_CORRECTA - !correcta * PUNTAJE_INCORRECTA;
                     break;
                 case 1:
-                    puntaje_stem += correcta * PUNTAJE_CORRECTA - correcta * PUNTAJE_INCORRECTA;
+                    puntaje_stem += correcta * PUNTAJE_CORRECTA - !correcta * PUNTAJE_INCORRECTA;
                     break;
                 case 2:
-                    puntaje_hum += correcta * PUNTAJE_CORRECTA - correcta * PUNTAJE_INCORRECTA;
+                    puntaje_hum += correcta * PUNTAJE_CORRECTA - !correcta * PUNTAJE_INCORRECTA;
                     break;
                 default:
                     break;
