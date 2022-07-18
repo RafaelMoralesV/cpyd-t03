@@ -4,6 +4,7 @@
 #include "headers/OpenMPInputReader.h"
 #include "headers/MPIHostInputReader.h"
 #include "headers/MPINodeInputReader.h"
+#include "headers/Sorter.h"
 
 using namespace cpyd;
 
@@ -139,6 +140,9 @@ int main(int argc, char *argv[]) {
     }
 
     reader->readFile();
+
+    // perdon profe
+    Sorter::sort();
 
     MPI::Finalize();
     return 0;

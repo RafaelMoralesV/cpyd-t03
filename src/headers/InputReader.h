@@ -24,9 +24,6 @@ namespace cpyd {
 
         std::ofstream m_auxOFStream;
 
-        std::ofstream m_MathOFStream;
-        std::ofstream m_StemOFStream;
-        std::ofstream m_HumOFStream;
     public:
         bool invalidInputFile() override;
 
